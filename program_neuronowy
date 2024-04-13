@@ -1,0 +1,166 @@
+#include <iostream>
+#include <cmath>
+#include <vector>
+
+
+float funkcja_sigmoid(int x)
+{
+	float w = pow(2.71, x) / (1 + pow(2.71, x));
+	return w;
+}
+
+class pytanie
+{
+	std::string tresc;
+	bool czy_istotne;
+	int waga;
+public:
+	pytanie(std::string tresc, int waga)
+	{
+		this->tresc = tresc;
+
+		this->waga = waga;
+	}
+	int zwroc_waga()
+	{
+		return waga;
+	}
+	bool zwroc_czy_istotne()
+	{
+		return czy_istotne;
+	}
+	std::string zwroc_tresc()
+	{
+		return tresc;
+	}
+	void ustaw_czy_istotne(bool czy_istotne)
+	{
+		this->czy_istotne = czy_istotne;
+	}
+	void wyswietl_pytanie()
+	{
+		std::cout << "waga pytania:" << waga << "  " << tresc << std::endl;
+	}
+	int zwroc_wartosc()
+	{
+		int wartosc = czy_istotne * waga;
+		return wartosc;
+	}
+};
+
+
+// funkcja sugmoidalna 2,71^x/(1+2,71^x)
+
+
+
+class neuron
+{
+	float wartosc;
+	int bias;
+	bool odpalony;
+public:
+	neuron(float wartos = 0, bool odpalony = false, int bias = 2)
+	{
+		this->wartosc = wartos;
+		this->odpalony = odpalony;
+		this->bias = bias;
+	}
+	float zwroc_wartosc()
+	{
+		return wartosc;
+	}
+	void sprawdz_Wartosc()
+	{
+		if (wartosc < 0.5)
+		{
+			odpalony = false;
+		}
+		else if (wartosc >= 0.5)
+		{
+			odpalony = true;
+		}
+	}
+	bool zwroc_odpoalony()
+	{
+		return odpalony;
+	}
+	void ustaw_wartosc(int wartosc)
+	{
+		this->wartosc = funkcja_sigmoid(wartosc + bias);
+	}
+
+
+
+
+
+};
+void obsluz_pytanie(pytanie* c)
+{
+	bool prawda = false;
+	c->wyswietl_pytanie();
+	std::cout << "Odpowiedz:";
+	std::cin >> prawda;
+	c->ustaw_czy_istotne(prawda);
+
+}
+
+
+
+
+
+
+int main()
+{
+	pytanie a1("Czy jadles dzis kebaba?", 3);
+	pytanie a2("Czy dzis sie wyprozniales ?", -5);
+	pytanie a3("Czy masz biegunke?", 7);
+	pytanie a4("Czy mieszkasz w lesie", 1);
+	pytanie a5("Czy masz toalete w domu", -3);
+	obsluz_pytanie(&a1);
+	obsluz_pytanie(&a2);
+	obsluz_pytanie(&a3);
+	obsluz_pytanie(&a4);
+	obsluz_pytanie(&a5);
+
+	neuron b1(0, false, 1);
+	neuron b2(0, false, -1);
+	neuron b3(0, false,  -1);
+	b1.ustaw_wartosc(a1.zwroc_wartosc() + a2.zwroc_wartosc() + a3.zwroc_wartosc());
+	b1.sprawdz_Wartosc();
+	b2.ustaw_wartosc(a4.zwroc_wartosc()+ a5.zwroc_wartosc());
+	b2.sprawdz_Wartosc();
+
+	if (b1.zwroc_odpoalony())
+	{
+		std::cout << "Dzis sie wyproznisz " << std::endl;
+	}
+	else
+	{
+		std::cout << "Dzis sie nie wyproznisz" << std::endl;
+	}
+	b3.ustaw_wartosc(b2.zwroc_wartosc());
+	b3.sprawdz_Wartosc();
+	if(b3.zwroc_odpoalony())
+	{
+		std::cout << "Wyproznisz sie na jeza" << std::endl;
+	}
+	else
+	{
+		std::cout << "Pombujesz wodzie poedwodne"<<std::endl;
+	}
+	
+
+	
+
+
+
+
+
+
+
+
+
+
+
+		return 0;
+}
